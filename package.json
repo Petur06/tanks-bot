@@ -1,0 +1,13 @@
+{
+    "name": "tanks.gg",
+    "version": "1.0.0",
+    "description": "My own Discord bot",
+    "main": "bot.js",
+    "author": "Petur",
+    "dependencies": {
+      "discord.io": "^2.5.3",
+      "http": "0.0.0",
+      "https": "^1.0.0",
+      "winston": "^2.4.0"
+    }
+}
