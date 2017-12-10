@@ -5,9 +5,9 @@
     "main": "bot.js",
     "author": "Petur",
     "dependencies": {
-      "discord.io": "^2.5.3",
-      "http": "0.0.0",
-      "https": "^1.0.0",
-      "winston": "^2.4.0"
+        "discord.io": "github:woor/discord.io#gateway_v6",
+        "http": "0.0.0",
+        "https": "^1.0.0",
+        "winston": "^2.4.0"
     }
 }

@@ -33,7 +33,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
        
         args = args.splice(1);
 
-        var tankName = args.join('%20');
+        args = args.join('%20');
 
         switch(cmd) {
             // !ping
@@ -44,12 +44,78 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                 });
                 break;
             case 'tank':
-                findTank(tankName, channelID);
+                findTank(args, channelID);
+                break;
+            case 'eu':
+                findUser(args, channelID);
                 break;
             // Just add any case commands if you want to..
          }
      }
 });
+
+findUser = function(name, channelID) {
+    var path = '/api/ranges/eu/' + name;
+
+    logger.info(path);
+
+    // https://stats.tanks.gg/api/ranges/eu/pejote
+
+    var options = {
+        host: 'stats.tanks.gg',
+        port: 443,
+        path: path,
+        method: 'GET',
+        headers: {
+            accept: '*/*'
+        }
+    };
+
+    callback = function(response) {
+        var str = '';
+
+        response.on('data', function (chunk) {
+            str += chunk;
+        });
+
+        response.on('end', function() {
+            var result = JSON.parse(str);
+
+            if (result.queued) {
+                bot.sendMessage({
+                    to: channelID,
+                    message: 'Player queued for update, try again in a few seconds...'
+                });
+                return;
+            }
+
+            if (!result.intervals)
+            {
+                bot.sendMessage({
+                    to: channelID,
+                    message: 'No player found :('
+                });
+                return;
+            }
+
+            var dayInterval = result.intervals["1"];
+
+            var winRate = (dayInterval.wins / dayInterval.battles) * 100;
+
+            var message = 'Last 24h stats for ' + result.name + '\r\n';
+            message += 'Battles: ' + dayInterval.battles + '\r\n';
+            message += 'Win rate: ' + winRate.toFixed(2) + '%\r\n';
+            message += 'WN8: ' + dayInterval.wn8.toFixed(2);
+
+            bot.sendMessage({
+                to: channelID,
+                message: message
+            });
+        });
+    };
+
+    http.request(options, callback).end();
+}
 
 findTank = function(name, channelID) {
     var path = '/api/v092014/search/' + name;
