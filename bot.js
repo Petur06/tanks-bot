@@ -84,8 +84,13 @@ findUser = function(name, channelID) {
             if (result.queued) {
                 bot.sendMessage({
                     to: channelID,
-                    message: 'Player queued for update, try again in a few seconds...'
+                    message: 'Player queued for update, will try again in a few seconds...'
                 });
+
+                setTimeout(() => {
+                    findUser(name, channelID);
+                }, 3000);
+
                 return;
             }
 
