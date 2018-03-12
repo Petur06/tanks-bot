@@ -23,35 +23,32 @@ bot.on('ready', function (evt) {
 });
 
 bot.on('message', function (user, userID, channelID, message, evt) {
-    // Our bot needs to know if it will execute a command
-    // It will listen for messages that will start with `!`
-    if (message.substring(0, 1) == '!') {
-        logger.info(message);
+    if (message.substring(0,1) !== '!')
+        return;
+    
+    var args = message.substring(1).split(' ');
+    var cmd = args[0];
+    
+    args = args.splice(1);
 
-        var args = message.substring(1).split(' ');
-        var cmd = args[0];
-       
-        args = args.splice(1);
+    args = args.join('%20');
 
-        args = args.join('%20');
-
-        switch(cmd) {
-            // !ping
-            case 'ping':
-                bot.sendMessage({
-                    to: channelID,
-                    message: 'Pong!'
-                });
-                break;
-            case 'tank':
-                findTank(args, channelID);
-                break;
-            case 'eu':
-                findUser(args, channelID);
-                break;
-            // Just add any case commands if you want to..
-         }
-     }
+    switch(cmd) {
+        // !ping
+        case 'ping':
+            bot.sendMessage({
+                to: channelID,
+                message: 'Pong!'
+            });
+            break;
+        case 'tank':
+            findTank(args, channelID);
+            break;
+        case 'eu':
+            findUser(args, channelID);
+            break;
+        // Just add any case commands if you want to..
+    }
 });
 
 findUser = function(name, channelID) {
@@ -108,7 +105,10 @@ findUser = function(name, channelID) {
             var winRate = (dayInterval.wins / dayInterval.battles) * 100;
 
             var wn8 = dayInterval.wn8.toFixed(2);
-            message += 'Battles: ' + dayInterval.battles + '\r\n';
+
+            var message = 'Battles: ' + dayInterval.battles + '\r\n';
+            message += 'Win rate: ' + winRate.toFixed(2) + '%\r\n';
+            message += 'WN8: ' + wn8;
 
             var message = 'Battles: ' + dayInterval.battles + '\r\n';
             message += 'Win rate: ' + winRate.toFixed(2) + '%\r\n';
@@ -121,11 +121,30 @@ findUser = function(name, channelID) {
                     color: getColor(wn8),
                     description: message
                 }
-             });
+            });
         });
     };
 
     http.request(options, callback).end();
+}
+
+getColor = function (wn8) {
+    if (wn8 < 423)
+        return 0xFF0000;
+    
+    if (wn8 < 956)
+        return 0xcd3333;
+    
+    if (wn8 < 1555)
+        return 0xFFA500;
+    
+    if (wn8 < 2343)
+        return 0x008000;
+    
+    if (wn8 < 3155)
+        return 0x40E0D0;
+    
+    return 0xEE82EE;
 }
 
 findTank = function(name, channelID) {
