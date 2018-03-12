@@ -109,10 +109,6 @@ findUser = function(name, channelID) {
             var message = 'Battles: ' + dayInterval.battles + '\r\n';
             message += 'Win rate: ' + winRate.toFixed(2) + '%\r\n';
             message += 'WN8: ' + wn8;
-
-            var message = 'Battles: ' + dayInterval.battles + '\r\n';
-            message += 'Win rate: ' + winRate.toFixed(2) + '%\r\n';
-            message += 'WN8: ' + wn8;
  
              bot.sendMessage({
                 to: channelID,
