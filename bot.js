@@ -107,15 +107,21 @@ findUser = function(name, channelID) {
 
             var winRate = (dayInterval.wins / dayInterval.battles) * 100;
 
-            var message = 'Last 24h stats for ' + result.name + '\r\n';
+            var wn8 = dayInterval.wn8.toFixed(2);
             message += 'Battles: ' + dayInterval.battles + '\r\n';
-            message += 'Win rate: ' + winRate.toFixed(2) + '%\r\n';
-            message += 'WN8: ' + dayInterval.wn8.toFixed(2);
 
-            bot.sendMessage({
+            var message = 'Battles: ' + dayInterval.battles + '\r\n';
+            message += 'Win rate: ' + winRate.toFixed(2) + '%\r\n';
+            message += 'WN8: ' + wn8;
+ 
+             bot.sendMessage({
                 to: channelID,
-                message: message
-            });
+                embed: {
+                    title: 'Last 24h stats for ' + result.name,
+                    color: getColor(wn8),
+                    description: message
+                }
+             });
         });
     };
 
