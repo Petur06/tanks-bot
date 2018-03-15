@@ -144,7 +144,7 @@ getColor = function (wn8) {
 }
 
 findTank = function(name, channelID) {
-    var path = '/api/v092014/search/' + name;
+    var path = '/api/v092201/search/' + name;
 
     logger.info(path);
 
