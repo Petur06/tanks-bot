@@ -8,6 +8,8 @@
         "discord.io": "github:woor/discord.io#gateway_v6",
         "http": "0.0.0",
         "https": "^1.0.0",
+        "request": "^2.87.0",
+        "request-promise": "^4.2.2",
         "winston": "^2.4.0"
     }
 }
