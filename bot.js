@@ -9,7 +9,9 @@ logger.remove(logger.transports.Console);
 logger.add(logger.transports.Console, {
     colorize: true
 });
+
 logger.level = 'debug';
+
 // Initialize Discord Bot
 var bot = new Discord.Client({
    token: auth.token,
@@ -51,15 +53,9 @@ bot.on('message', function (user, userID, channelID, message, evt) {
     }
 });
 
-findUser = function(name, channelID) {
-    var path = '/api/ranges/eu/' + name;
-
-    logger.info(path);
-
-    // https://stats.tanks.gg/api/ranges/eu/pejote
-
-    var options = {
-        host: 'stats.tanks.gg',
+createRequest = function(host, path) {
+    return {
+        host: host,
         port: 443,
         path: path,
         method: 'GET',
@@ -67,6 +63,16 @@ findUser = function(name, channelID) {
             accept: '*/*'
         }
     };
+}
+
+findUser = function(name, channelID) {
+    var path = '/api/ranges/eu/' + name;
+
+    logger.info(path);
+
+    // https://stats.tanks.gg/api/ranges/eu/pejote
+
+    var options = createRequest('stats.tanks.gg', path);
 
     callback = function(response) {
         var str = '';
@@ -148,15 +154,7 @@ findTank = function(name, channelID) {
 
     logger.info(path);
 
-    var options = {
-        host: 'tanks.gg',
-        port: 443,
-        path: path,
-        method: 'GET',
-        headers: {
-            accept: '*/*'
-        }
-    };
+    var options = createRequest('tanks.gg', path);
 
     callback = function(response) {
         var str = '';
